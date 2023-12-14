@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block main %}
+    <h3 class="mb-3">{{ task.title }}</h3>
+    <p><b>Статус:</b> {{ task.status.name }}</p>
+    <p><b>Тип:</b> {{ task.type.name }}</p>
+    <p><b>Полное описание:</b><br> {{ task.description }}</p><br>
+    <a class="btn btn-danger" href="{% url 'task-delete' pk=task.pk %}">Удалить</a>
+    <a class="btn btn-primary ms-3" href="{% url 'task-edit' pk=task.pk %}">Редактировать</a>
+{% endblock %}
