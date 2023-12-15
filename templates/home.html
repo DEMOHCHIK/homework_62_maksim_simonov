@@ -5,7 +5,12 @@
         {% for task in tasks %}
             <div class="task mb-3">
                 <h5>{{ task.title }}</h5>
-                <span>{{ task.status.name }} - {{ task.type.name }}</span><br>
+                <span>Status: {{ task.status.name }}</span><br>
+                <span>Type:
+                    {% for type in task.types.all %}
+                	    {{ type.name }}{% if forloop.last %}.{% else %},{% endif %}
+                    {% endfor %}
+                </span><br>
                 <a href="{% url 'task-detail' pk=task.pk %}" style="color: saddlebrown">Подробнее</a>
             </div>
         {% endfor %}
