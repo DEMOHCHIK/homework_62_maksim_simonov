@@ -19,10 +19,10 @@ class TypeForm(forms.ModelForm):
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ['title', 'description', 'status', 'type']
+        fields = ['title', 'description', 'status', 'types']
         labels = {
             'title': 'Заголовок',
             'description': 'Полное описание',
             'status': 'Статус',
-            'type': 'Тип'
+            'types': 'Типы'
         }

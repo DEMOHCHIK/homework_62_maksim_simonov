@@ -14,4 +14,4 @@ class TypeAdmin(admin.ModelAdmin):
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ['title', 'status', 'type', 'add_time', 'edit_time']
+    list_display = ['title', 'status', 'types', 'add_time', 'edit_time']
