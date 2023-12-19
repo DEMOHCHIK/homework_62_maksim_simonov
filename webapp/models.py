@@ -1,4 +1,5 @@
 from django.db import models
+from .validators import validate_title, validate_description
 
 
 class Status(models.Model):
@@ -16,8 +17,9 @@ class Type(models.Model):
 
 
 class Task(models.Model):
-    title = models.CharField(max_length=255, verbose_name='Заголовок')
-    description = models.TextField(blank=True, null=True, verbose_name='Полное описание')
+    title = models.CharField(max_length=255, verbose_name='Заголовок', validators=[validate_title])
+    description = models.TextField(blank=True, null=True, verbose_name='Полное описание',
+                                   validators=[validate_description])
     status = models.ForeignKey('webapp.Status', on_delete=models.PROTECT, verbose_name='Статус')
     types = models.ManyToManyField('webapp.Type', blank=True, related_name='tasks', verbose_name='Типы')
     add_time = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
