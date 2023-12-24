@@ -4,7 +4,7 @@
     <form method="post" style="display: inline">
         {% csrf_token %}
         {% include 'partial/task_form.html' %}
-        <button type="submit" class="btn btn-primary">Изменить</button>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
     </form>
-    <a class="btn btn-danger ms-3" href="{% url 'task-detail' pk=task.pk %}">Отмена</a>
+    <a class="btn btn-danger ms-3" href="{% url 'task_detail' pk=task.pk %}">Отмена</a>
 {% endblock %}

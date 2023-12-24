@@ -1,5 +1,5 @@
 from django import forms
-from .models import Status, Type, Task
+from .models import Status, Type, Task, Project
 
 
 class StatusForm(forms.ModelForm):
@@ -26,3 +26,19 @@ class TaskForm(forms.ModelForm):
             'status': 'Статус',
             'types': 'Типы'
         }
+
+
+class ProjectForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ['start_date', 'end_date', 'name', 'description']
+        labels = {
+            'start_date': 'Дата начала',
+            'end_date': 'Дата окончания',
+            'name': 'Наименование',
+            'description': 'Описание',
+        }
+
+
+class ProjectSearchForm(forms.Form):
+    q = forms.CharField(label='Поиск', required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))

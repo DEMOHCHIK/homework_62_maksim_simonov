@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block main %}
+    <h3>Вы уверены, что хотите удалить проект "{{ project.name }}"?</h3>
+    {% if has_tasks %}
+        <p style="color: red">У проекта "{{ project.name }}" есть задачи. Удаление проекта также удалит все связанные задачи.</p>
+    {% endif %}
+        <form method="post" style="display: inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Удалить</button>
+        </form>
+    <a class="btn btn-primary ms-3" href="{% url 'project_detail' pk=project.pk %}">Отмена</a>
+{% endblock %}

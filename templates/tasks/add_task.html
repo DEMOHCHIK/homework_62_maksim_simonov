@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block main %}
+    <h2>Добавить Задачу:</h2>
+    <form method="post" style="display: inline">
+        {% csrf_token %}
+        {% include 'partial/task_form.html' %}
+        <button type="submit" class="btn btn-primary">Добавить</button>
+    </form>
+    <a class="btn btn-danger ms-3" href="{% url 'project_detail' pk=project.pk %}">Отмена</a>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block menu %}
+    <a class="nav-link" href="{% url 'add_task' pk=project.pk %}">Add Task</a>
+{% endblock %}
+{% block main %}
+    <h1 class="mb-3">{{ project.name }}</h1>
+    <p><b>Дата начала:</b> {{ project.start_date }}</p>
+    <p><b>Дата окончания:</b> {{ project.end_date }}</p>
+    <p><b>Описание:</b><br> {{ project.description }}</p>
+    <div class="project_link mb-4">
+        <a href="{% url 'project_edit' pk=project.pk %}" class="btn btn-primary">Изменить</a>
+        <a href="{% url 'project_delete' pk=project.pk %}" class="btn btn-danger ms-3">Удалить</a>
+    </div>
+
+    <h3 class="mb-4">Список задач для этого проекта:</h3>
+    <div class="row row-cols-5 task_list">
+        {% for task in tasks %}
+            <div class="col">
+                <div class="task p-2 my-3">
+                    <div>
+                        <h5>{{ task.title }}</h5>
+                        <span>Status: {{ task.status.name }}</span><br>
+                        <span>Type:
+                            {% for type in task.types.all %}
+                                {{ type.name }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </span><br>
+                        <a href="{% url 'task_detail' pk=task.pk %}" style="color: saddlebrown">Details..</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <h3>Нет задач.</h3>
+        {% endfor %}
+    </div>
+{% endblock %}

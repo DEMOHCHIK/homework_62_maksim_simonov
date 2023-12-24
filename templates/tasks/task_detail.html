@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
+{% block menu %}
+    <a href="{% url 'project_detail' pk=project.pk %}" class="nav-link">Project</a>
+{% endblock %}
 {% block main %}
     <h3 class="mb-3">{{ task.title }}</h3>
     <p><b>Статус:</b> {{ task.status.name }}</p>
@@ -7,6 +10,6 @@
             {{ type.name }}{% if forloop.last %}.{% else %},{% endif %}
         {% endfor %}</p>
     <p><b>Полное описание:</b><br> {{ task.description }}</p><br>
-    <a class="btn btn-danger" href="{% url 'task-delete' pk=task.pk %}">Удалить</a>
-    <a class="btn btn-primary ms-3" href="{% url 'task-edit' pk=task.pk %}">Редактировать</a>
+    <a class="btn btn-danger" href="{% url 'task_delete' pk=task.pk %}">Удалить</a>
+    <a class="btn btn-primary ms-3" href="{% url 'task_edit' pk=task.pk project_pk=project.pk%}">Изменить</a>
 {% endblock %}

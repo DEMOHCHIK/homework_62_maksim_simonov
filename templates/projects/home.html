@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block menu %}
+    <a class="nav-link" href="{% url 'add_project' %}">Add Project</a>
+{% endblock %}
+{% block search %}
+    <form method="get" class="d-flex">
+        <div class="form-group">
+            <input type="text" name="q" class="form-control" placeholder="Поиск" value="{{ search_form.q.value }}">
+        </div>
+        <button type="submit" class="ms-3 btn btn-primary">Найти</button>
+    </form>
+{% endblock %}
+{% block main %}
+    {% if projects %}
+        <h2 class="mb-4">Список Проектов:</h2>
+        {% for project in projects %}
+            <div class="project_card p-2 mb-3" style="text-align: center; border: 2px solid saddlebrown;
+border-radius: 10px; background-color: antiquewhite; align-items: center">
+                <a href="{% url 'project_detail' pk=project.pk %}"
+                   style="color: saddlebrown; text-decoration: none"><h5><b>{{ project.name }}</b></h5></a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <h3>Проектов не найдено.</h3>
+    {% endif %}
+{% endblock %}
+

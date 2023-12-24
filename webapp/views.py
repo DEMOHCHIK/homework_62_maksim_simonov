@@ -1,70 +1,120 @@
-from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, View
-from django.shortcuts import get_object_or_404
-from .forms import TaskForm
-from .models import Task
+# from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic import DetailView, CreateView, DeleteView, UpdateView, ListView
+from webapp.forms import TaskForm, ProjectSearchForm, ProjectForm
+from webapp.models import Task, Project
+from django.urls import reverse_lazy
 
 
-class TaskListView(TemplateView):
-    template_name = 'home.html'
+# --- task_views ---
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['tasks'] = Task.objects.all()
-        return context
-
-
-class TaskDetailView(TemplateView):
-    template_name = 'task_detail.html'
+class TaskDetailView(DetailView):
+    model = Task
+    template_name = 'tasks/task_detail.html'
+    context_object_name = 'task'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        task_id = kwargs.get('pk')
-        task = get_object_or_404(Task, pk=task_id)
-        context['task'] = task
+        project = self.object.project
+        context['project'] = project
         return context
 
 
-class TaskAddView(TemplateView):
-    template_name = 'add_task.html'
+class TaskCreateView(CreateView):
+    model = Task
+    form_class = TaskForm
+    template_name = 'tasks/add_task.html'
 
-    def get(self, request, *args, **kwargs):
-        form = TaskForm()
-        return render(request, self.template_name, {'form': form})
+    def form_valid(self, form):
+        form.instance.project_id = self.kwargs.get('pk')
+        return super().form_valid(form)
 
-    def post(self, request, *args, **kwargs):
-        form = TaskForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('home')
-        return render(request, self.template_name, {'form': form})
+    def get_success_url(self):
+        return reverse_lazy('project_detail', kwargs={'pk': self.kwargs.get('pk')})
 
-
-class TaskDeleteView(View):
-    template_name = 'task_delete.html'
-
-    def get(self, request, *args, **kwargs):
-        task = Task.objects.get(pk=kwargs['pk'])
-        return render(request, self.template_name, {'task': task})
-
-    def post(self, request, *args, **kwargs):
-        task = Task.objects.get(pk=kwargs['pk'])
-        task.delete()
-        return redirect('home')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['project'] = Project.objects.get(pk=self.kwargs.get('pk'))
+        return context
 
 
-class TaskEditView(View):
-    template_name = 'task_edit.html'
+class TaskDeleteView(DeleteView):
+    model = Task
+    template_name = 'tasks/task_delete.html'
 
-    def get(self, request, *args, **kwargs):
-        task = Task.objects.get(pk=kwargs['pk'])
-        form = TaskForm(instance=task)
-        return render(request, self.template_name, {'form': form, 'task': task})
+    def get_success_url(self):
+        project_pk = self.object.project.pk
+        return reverse_lazy('project_detail', kwargs={'pk': project_pk})
 
-    def post(self, request, *args, **kwargs):
-        task = Task.objects.get(pk=kwargs['pk'])
-        form = TaskForm(request.POST, instance=task)
-        if form.is_valid():
-            form.save()
-            return redirect('home')
-        return render(request, self.template_name, {'form': form, 'task': task})
+
+class TaskUpdateView(UpdateView):
+    model = Task
+    form_class = TaskForm
+    template_name = 'tasks/task_edit.html'
+
+    def form_valid(self, form):
+        form.instance.project_id = self.kwargs.get('project_pk')
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('project_detail', kwargs={'pk': self.kwargs['project_pk']})
+
+
+class ProjectListView(ListView):
+    model = Project
+    template_name = 'projects/home.html'
+    context_object_name = 'projects'
+    paginate_by = 5
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        if query:
+            return Project.objects.filter(name__icontains=query) | Project.objects.filter(description__icontains=query)
+        return Project.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        initial_data = {'q': self.request.GET.get('q', '')}
+        context['search_form'] = ProjectSearchForm(initial=initial_data)
+        return context
+
+
+class ProjectDetailView(DetailView):
+    model = Project
+    template_name = 'projects/project_detail.html'
+    context_object_name = 'project'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        project = self.get_object()
+        context['tasks'] = project.task_set.all()
+        return context
+
+
+class ProjectCreateView(CreateView):
+    model = Project
+    form_class = ProjectForm
+    template_name = 'projects/add_project.html'
+    success_url = reverse_lazy('home')
+
+    def get_success_url(self):
+        return reverse_lazy('project_detail', kwargs={'pk': self.object.pk})
+
+
+class ProjectUpdateView(UpdateView):
+    model = Project
+    form_class = ProjectForm
+    template_name = 'projects/project_edit.html'
+
+    def get_success_url(self):
+        return reverse_lazy('project_detail', kwargs={'pk': self.object.pk})
+
+
+class ProjectDeleteView(DeleteView):
+    model = Project
+    template_name = 'projects/project_delete.html'
+    success_url = reverse_lazy('home')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['has_tasks'] = self.object.task_set.exists()
+        return context
