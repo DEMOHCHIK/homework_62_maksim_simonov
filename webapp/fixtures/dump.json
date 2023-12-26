@@ -142,9 +142,42 @@
         "status": 2,
         "project": 1,
         "add_time": "2023-12-19T06:08:50.883Z",
-        "edit_time": "2023-12-19T06:08:50.883Z",
+        "edit_time": "2023-12-24T09:25:21.725Z",
+        "types": [
+            2,
+            3
+        ]
+    }
+},
+{
+    "model": "webapp.task",
+    "pk": 9,
+    "fields": {
+        "title": "wewew",
+        "description": "ewewewe",
+        "status": 1,
+        "project": 2,
+        "add_time": "2023-12-24T06:16:22.710Z",
+        "edit_time": "2023-12-24T06:16:22.710Z",
         "types": [
             2
+        ]
+    }
+},
+{
+    "model": "webapp.task",
+    "pk": 10,
+    "fields": {
+        "title": "wewew",
+        "description": "ewewewe",
+        "status": 1,
+        "project": 2,
+        "add_time": "2023-12-24T06:19:18.426Z",
+        "edit_time": "2023-12-24T09:13:48.687Z",
+        "types": [
+            1,
+            2,
+            3
         ]
     }
 },
@@ -156,6 +189,56 @@
         "end_date": "2024-04-23",
         "name": "Create your project",
         "description": "The challenge of creating your own project involves developing and implementing a unique initiative or idea. Includes stages from concept and planning to execution and promotion. This requires defining the project's goals, selecting the necessary resources, developing a business plan (if applicable), programming (in the case of technical projects), and ultimately - careful management of the process to achieve the goals and implement the conceived idea."
+    }
+},
+{
+    "model": "webapp.project",
+    "pk": 2,
+    "fields": {
+        "start_date": "2023-12-26",
+        "end_date": "2024-06-24",
+        "name": "Project 2",
+        "description": "The project aims to develop a smart assistant that will facilitate task management and increase productivity. Includes functionality for creating, editing and tracking tasks, notifications, time analysis and priorities.\r\nThe app also provides calendar integration and the ability to sync data between devices. The goal of the project is to provide users with an effective tool for managing their time and tasks."
+    }
+},
+{
+    "model": "webapp.project",
+    "pk": 6,
+    "fields": {
+        "start_date": "2024-04-23",
+        "end_date": "2026-09-10",
+        "name": "Buy a car",
+        "description": "The 'Buy a car' task involves the process of selecting, purchasing and registering a car. The stages include identifying needs and preferences, market research, choosing the right car, conducting a test drive, identifying financial opportunities, completing the transaction and obtaining the necessary documents.\r\nThe goal of the task is to successfully purchase a vehicle that meets the requirements and provides satisfaction of ownership."
+    }
+},
+{
+    "model": "webapp.project",
+    "pk": 7,
+    "fields": {
+        "start_date": "2023-12-26",
+        "end_date": "2024-06-24",
+        "name": "Project 3",
+        "description": "Description 3"
+    }
+},
+{
+    "model": "webapp.project",
+    "pk": 8,
+    "fields": {
+        "start_date": "2024-04-23",
+        "end_date": "2024-06-24",
+        "name": "Project 4",
+        "description": "Description 4"
+    }
+},
+{
+    "model": "webapp.project",
+    "pk": 9,
+    "fields": {
+        "start_date": "2023-12-26",
+        "end_date": "2026-09-10",
+        "name": "Project 5",
+        "description": "DEscription 5"
     }
 }
 ]

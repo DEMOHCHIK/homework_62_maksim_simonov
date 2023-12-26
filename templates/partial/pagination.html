@@ -1,0 +1,25 @@
+<div class="pagination">
+    <span class="step-links d-flex">
+        <a class="btn btn-primary" href="?{% if query %}{{ query }}&{% endif %}page=1">&laquo;</a>
+        {% if page_obj.has_previous %}
+            <a class="btn btn-secondary ms-2" href="?{% if query %}{{ query }}&{% endif %}page={{ page_obj.previous_page_number }}"><</a>
+        {% else %}
+            <span class="page-disabled btn btn-secondary ms-2"><</span>
+        {% endif %}
+
+        <form class="current-page ms-2" method="get">
+            <label for="page">
+                <input type="hidden" name="search" value="{{ search_value }}">
+                Страница <input type="text" name="page" id="page" value="{{ page_obj.number }}">
+                из {{ page_obj.paginator.num_pages }}.
+            </label>
+        </form>
+
+        {% if page_obj.has_next %}
+            <a class="btn btn-secondary ms-2" href="?{% if query %}{{ query }}&{% endif %}page={{ page_obj.next_page_number }}">></a>
+        {% else %}
+            <span class="page-disabled btn btn-secondary ms-2">></span>
+        {% endif %}
+        <a class="btn btn-primary ms-2" href="?{% if query %}{{ query }}&{% endif %}page={{ page_obj.paginator.num_pages }}">&raquo;</a>
+    </span>
+</div>

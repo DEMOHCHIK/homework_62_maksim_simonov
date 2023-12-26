@@ -11,6 +11,9 @@
     </form>
 {% endblock %}
 {% block main %}
+    {% if is_paginated %}
+    	{% include 'partial/pagination.html' %}
+    {% endif %}
     {% if projects %}
         <h2 class="mb-4">Список Проектов:</h2>
         {% for project in projects %}
