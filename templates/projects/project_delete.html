@@ -8,5 +8,5 @@
             {% csrf_token %}
             <button type="submit" class="btn btn-danger">Удалить</button>
         </form>
-    <a class="btn btn-primary ms-3" href="{% url 'project_detail' pk=project.pk %}">Отмена</a>
+    <a class="btn btn-primary ms-3" href="{% url 'webapp:project_detail' pk=project.pk %}">Отмена</a>
 {% endblock %}

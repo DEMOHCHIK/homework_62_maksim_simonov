@@ -2,9 +2,9 @@
 
 {% block main %}
   <h3 class="mb-4">Вы уверены, что хотите удалить задачу "{{ task.title }}"?</h3>
-  <form style="display: inline" method="post" action="{% url 'task_delete' pk=task.pk %}">
+  <form style="display: inline" method="post" action="{% url 'webapp:task_delete' pk=task.pk %}">
       {% csrf_token %}
       <button class="btn btn-danger" type="submit">Удалить</button>
   </form>
-  <a class="btn btn-primary ms-3" href="{% url 'task_detail' pk=task.pk %}">Отмена</a>
+  <a class="btn btn-primary ms-3" href="{% url 'webapp:task_detail' pk=task.pk %}">Отмена</a>
 {% endblock %}

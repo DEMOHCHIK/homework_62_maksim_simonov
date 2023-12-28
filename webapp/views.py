@@ -1,11 +1,10 @@
-# from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
 from django.views.generic import DetailView, CreateView, DeleteView, UpdateView, ListView
 from webapp.forms import TaskForm, ProjectSearchForm, ProjectForm
 from webapp.models import Task, Project
 from django.urls import reverse_lazy
 
-
-# --- task_views ---
 
 class TaskDetailView(DetailView):
     model = Task
@@ -19,7 +18,7 @@ class TaskDetailView(DetailView):
         return context
 
 
-class TaskCreateView(CreateView):
+class TaskCreateView(LoginRequiredMixin, CreateView):
     model = Task
     form_class = TaskForm
     template_name = 'tasks/add_task.html'
@@ -29,7 +28,7 @@ class TaskCreateView(CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('project_detail', kwargs={'pk': self.kwargs.get('pk')})
+        return reverse_lazy('webapp:project_detail', kwargs={'pk': self.kwargs.get('pk')})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -37,16 +36,16 @@ class TaskCreateView(CreateView):
         return context
 
 
-class TaskDeleteView(DeleteView):
+class TaskDeleteView(LoginRequiredMixin, DeleteView):
     model = Task
     template_name = 'tasks/task_delete.html'
 
     def get_success_url(self):
         project_pk = self.object.project.pk
-        return reverse_lazy('project_detail', kwargs={'pk': project_pk})
+        return reverse_lazy('webapp:project_detail', kwargs={'pk': project_pk})
 
 
-class TaskUpdateView(UpdateView):
+class TaskUpdateView(LoginRequiredMixin, UpdateView):
     model = Task
     form_class = TaskForm
     template_name = 'tasks/task_edit.html'
@@ -56,7 +55,7 @@ class TaskUpdateView(UpdateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('project_detail', kwargs={'pk': self.kwargs['project_pk']})
+        return reverse_lazy('webapp:project_detail', kwargs={'pk': self.kwargs['project_pk']})
 
 
 class ProjectListView(ListView):
@@ -90,26 +89,26 @@ class ProjectDetailView(DetailView):
         return context
 
 
-class ProjectCreateView(CreateView):
+class ProjectCreateView(LoginRequiredMixin, CreateView):
     model = Project
     form_class = ProjectForm
     template_name = 'projects/add_project.html'
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('webapp:home')
 
     def get_success_url(self):
-        return reverse_lazy('project_detail', kwargs={'pk': self.object.pk})
+        return reverse_lazy('webapp:project_detail', kwargs={'pk': self.object.pk})
 
 
-class ProjectUpdateView(UpdateView):
+class ProjectUpdateView(LoginRequiredMixin, UpdateView):
     model = Project
     form_class = ProjectForm
     template_name = 'projects/project_edit.html'
 
     def get_success_url(self):
-        return reverse_lazy('project_detail', kwargs={'pk': self.object.pk})
+        return reverse_lazy('webapp:project_detail', kwargs={'pk': self.object.pk})
 
 
-class ProjectDeleteView(DeleteView):
+class ProjectDeleteView(LoginRequiredMixin, DeleteView):
     model = Project
     template_name = 'projects/project_delete.html'
     success_url = reverse_lazy('home')

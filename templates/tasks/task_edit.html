@@ -6,5 +6,5 @@
         {% include 'partial/task_form.html' %}
         <button type="submit" class="btn btn-primary">Сохранить</button>
     </form>
-    <a class="btn btn-danger ms-3" href="{% url 'task_detail' pk=task.pk %}">Отмена</a>
+    <a class="btn btn-danger ms-3" href="{% url 'webapp:task_detail' pk=task.pk %}">Отмена</a>
 {% endblock %}
