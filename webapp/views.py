@@ -6,6 +6,7 @@ from webapp.models import Task, Project
 from django.urls import reverse_lazy
 
 
+# -- task_views --
 class TaskDetailView(DetailView):
     model = Task
     template_name = 'tasks/task_detail.html'
@@ -58,6 +59,7 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
         return reverse_lazy('webapp:project_detail', kwargs={'pk': self.kwargs['project_pk']})
 
 
+# -- project_views --
 class ProjectListView(ListView):
     model = Project
     template_name = 'projects/home.html'

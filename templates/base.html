@@ -24,11 +24,15 @@
                     {% endblock %}
                     {% block log_in %}
                         {% if not request.user.is_authenticated %}
-                            <a class="nav-link" href="{% url 'accounts:login' %}">Log in</a>
+                            <a class="nav-link" href="{% url 'accounts:login' %}?next={{ request.get_full_path }}">Log in</a>
+                            <a class="nav-link" href="{% url 'accounts:create_user' %}?next={{ request.get_full_path }}">Register</a>
                         {% else %}
                             <span class="nav-link ms-2">|</span>
                             <span class="nav-link"><b>{{ request.user }}</b></span>
-                            <a class="nav-link" href="{% url 'accounts:logout' %}">Log Out</a>
+                            <form method="post" action="{% url 'accounts:logout' %}?next={{ request.get_full_path }}">
+                                {% csrf_token %}
+                                <button class="nav-link" type="submit">Log Out</button>
+                            </form>
                         {% endif %}
                     {% endblock %}
                 </div>

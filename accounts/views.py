@@ -1,21 +1,27 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
+from accounts.forms import MyUserCreationForm
+from django.shortcuts import reverse, render, redirect
+from django.contrib.auth import login, get_user_model
+from django.views.generic import CreateView
+from django.urls import reverse_lazy
 
 
-def login_user(request):
-    context = {}
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('webapp:home')
-        else:
-            context['has_error'] = True
-    return render(request, 'login.html', context=context)
+class RegisterUser(CreateView):
+    model = get_user_model()
+    form_class = MyUserCreationForm
+    template_name = 'create_user.html'
+    success_url = reverse_lazy('webapp:home')
 
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        return redirect(self.get_success_url())
 
-def logout_user(request):
-    logout(request)
-    return redirect('webapp:home')
+    def get_success_url(self):
+        next_page = self.request.GET.get('next')
+        if not next_page:
+            next_page = self.request.POST.get('next')
+        if not next_page:
+            next_page = reverse('webapp:home')
+
+        return next_page
+
