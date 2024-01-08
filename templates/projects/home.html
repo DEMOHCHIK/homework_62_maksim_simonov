@@ -14,7 +14,7 @@
 {% endblock %}
 {% block main %}
     {% if is_paginated %}
-    	{% include 'partial/pagination.html' %}
+        {% include 'partial/pagination.html' %}
     {% endif %}
     {% if projects %}
         <h2 class="mb-4">Список Проектов:</h2>
@@ -23,6 +23,14 @@
 border-radius: 10px; background-color: antiquewhite; align-items: center">
                 <a href="{% url 'webapp:project_detail' pk=project.pk %}"
                    style="color: saddlebrown; text-decoration: none"><h5><b>{{ project.name }}</b></h5></a>
+                <span style="color: saddlebrown;">
+                    Authors:
+                    {% for author in project.authors.all %}
+                        {{ author.username }}
+                        {% if not forloop.last %},
+                        {% endif %}
+                    {% endfor %}
+                </span>
             </div>
         {% endfor %}
     {% else %}

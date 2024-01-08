@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView, CreateView, DeleteView, UpdateView, ListView
-from webapp.forms import TaskForm, ProjectSearchForm, ProjectForm
+from webapp.forms import TaskForm, ProjectSearchForm, ProjectForm, ProjectUserForm
 from webapp.models import Task, Project
 from django.urls import reverse_lazy
 
@@ -87,6 +87,7 @@ class ProjectDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         project = self.get_object()
+        context['authors'] = project.authors.all()
         context['tasks'] = project.task_set.all()
         return context
 
@@ -106,6 +107,10 @@ class ProjectUpdateView(LoginRequiredMixin, UpdateView):
     form_class = ProjectForm
     template_name = 'projects/project_edit.html'
 
+    def form_valid(self, form):
+        form.instance.authors.add(self.request.user)
+        return super().form_valid(form)
+
     def get_success_url(self):
         return reverse_lazy('webapp:project_detail', kwargs={'pk': self.object.pk})
 
@@ -119,3 +124,19 @@ class ProjectDeleteView(LoginRequiredMixin, DeleteView):
         context = super().get_context_data(**kwargs)
         context['has_tasks'] = self.object.task_set.exists()
         return context
+
+
+# -- users_views --
+
+class AddAuthorView(UpdateView):
+    model = Project
+    form_class = ProjectUserForm
+    template_name = 'add_author.html'
+    context_object_name = 'project'
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('webapp:project_detail', kwargs={'pk': self.object.pk})

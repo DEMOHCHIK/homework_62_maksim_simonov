@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block main %}
+  <h4>Изменение авторов в проекте "{{ project.name }}"</h4>
+  <form method="post" style="display: inline">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn btn-primary" type="submit">Изменить</button>
+  </form>
+  <a class="btn btn-danger ms-3" href="{% url 'webapp:project_detail' pk=project.pk %}">Отмена</a>
+{% endblock %}

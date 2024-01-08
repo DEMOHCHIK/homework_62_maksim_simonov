@@ -1,5 +1,6 @@
 from django.db import models
 from .validators import validate_title, validate_description
+from django.contrib.auth import get_user_model
 
 
 class Status(models.Model):
@@ -35,6 +36,7 @@ class Project(models.Model):
     end_date = models.DateField(blank=True, null=True, verbose_name='Дата окончания')
     name = models.CharField(max_length=70, verbose_name='Название')
     description = models.TextField(verbose_name='Описание')
+    authors = models.ManyToManyField(get_user_model(), related_name='projects', verbose_name='Авторы')
 
     def __str__(self):
         return self.name

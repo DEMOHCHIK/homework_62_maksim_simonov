@@ -6,9 +6,17 @@
 {% endblock %}
 {% block main %}
     <h1 class="mb-3">{{ project.name }}</h1>
+    <b>Авторы:</b>
+    <ul>
+        {% for author in project.authors.all %}
+            <li>{{ author.username }}</li>
+        {% endfor %}
+    </ul>
+    <a class="btn btn-primary mb-3" href="{% url 'webapp:update_user' pk=project.pk %}">Изменить</a>
+
     <p><b>Дата начала:</b> {{ project.start_date }}</p>
     <p><b>Дата окончания:</b> {{ project.end_date }}</p>
-    <p><b>Описание:</b><br> {{ project.description }}</p>
+    <p><b>Описание:</b><br> {{ project.description }}</p><br>
     <div class="project_link mb-4">
         {% if request.user.is_authenticated %}
             <a href="{% url 'webapp:project_edit' pk=project.pk %}" class="btn btn-primary">Изменить</a>

@@ -9,7 +9,7 @@
         {% for type in task.types.all %}
             {{ type.name }}{% if forloop.last %}.{% else %},{% endif %}
         {% endfor %}</p>
-    <p><b>Полное описание:</b><br> {{ task.description }}</p><br>
+    <p><b>Полное описание:</b><br> {{ task.description }}</p>
     {% if request.user.is_authenticated %}
         <a class="btn btn-danger" href="{% url 'webapp:task_delete' pk=task.pk %}">Удалить</a>
         <a class="btn btn-primary ms-3" href="{% url 'webapp:task_edit' pk=task.pk project_pk=project.pk%}">Изменить</a>
