@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 {% block menu %}
     {% if request.user.is_authenticated %}
-        <a class="nav-link" href="{% url 'webapp:add_project' %}">Add Project</a>
+        {% if perms.webapp.add_project or project.authors == request.user %}
+                <a class="nav-link" href="{% url 'webapp:add_project' %}">Add Project</a>
+        {% endif %}
     {% endif %}
 {% endblock %}
 {% block search %}
