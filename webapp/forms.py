@@ -32,13 +32,12 @@ class TaskForm(forms.ModelForm):
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
-        fields = ['start_date', 'end_date', 'name', 'description', 'authors']
+        fields = ['start_date', 'end_date', 'name', 'description']
         labels = {
             'start_date': 'Дата начала',
             'end_date': 'Дата окончания',
             'name': 'Наименование',
             'description': 'Описание',
-            'authors': 'Авторы',
         }
 
 

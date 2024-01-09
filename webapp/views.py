@@ -98,6 +98,12 @@ class ProjectCreateView(LoginRequiredMixin, CreateView):
     template_name = 'projects/add_project.html'
     success_url = reverse_lazy('webapp:home')
 
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        response = super().form_valid(form)
+        form.instance.authors.add(self.request.user)
+        return response
+
     def get_success_url(self):
         return reverse_lazy('webapp:project_detail', kwargs={'pk': self.object.pk})
 
@@ -106,10 +112,6 @@ class ProjectUpdateView(LoginRequiredMixin, UpdateView):
     model = Project
     form_class = ProjectForm
     template_name = 'projects/project_edit.html'
-
-    def form_valid(self, form):
-        form.instance.authors.add(self.request.user)
-        return super().form_valid(form)
 
     def get_success_url(self):
         return reverse_lazy('webapp:project_detail', kwargs={'pk': self.object.pk})
