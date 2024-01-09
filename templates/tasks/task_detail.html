@@ -11,10 +11,10 @@
         {% endfor %}</p>
     <p><b>Полное описание:</b><br> {{ task.description }}</p>
     {% if request.user.is_authenticated %}
-        {% if perms.webapp.change_task or project.authors == request.user %}
+        {% if perms.webapp.change_task and user in project.authors.all %}
                 <a class="btn btn-primary" href="{% url 'webapp:task_edit' pk=task.pk project_pk=project.pk%}">Изменить</a>
         {% endif %}
-        {% if perms.webapp.delete_task or project.authors == request.user %}
+        {% if perms.webapp.delete_task and user in project.authors.all %}
                 <a class="btn btn-danger ms-3" href="{% url 'webapp:task_delete' pk=task.pk %}">Удалить</a>
         {% endif %}
     {% endif %}

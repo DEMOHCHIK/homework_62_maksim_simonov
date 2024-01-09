@@ -3,6 +3,7 @@ from django.views.generic import DetailView, CreateView, DeleteView, UpdateView,
 from webapp.forms import TaskForm, ProjectSearchForm, ProjectForm, ProjectUserForm
 from webapp.models import Task, Project
 from django.urls import reverse_lazy
+from django.shortcuts import get_object_or_404
 
 
 # -- task_views --
@@ -24,6 +25,10 @@ class TaskCreateView(PermissionRequiredMixin, CreateView):
     template_name = 'tasks/add_task.html'
     permission_required = 'webapp.add_task'
 
+    def has_permission(self):
+        project = get_object_or_404(Project, pk=self.kwargs.get('pk'))
+        return super().has_permission() and self.request.user in project.authors.all()
+
     def form_valid(self, form):
         form.instance.project_id = self.kwargs.get('pk')
         return super().form_valid(form)
@@ -42,6 +47,10 @@ class TaskDeleteView(PermissionRequiredMixin, DeleteView):
     template_name = 'tasks/task_delete.html'
     permission_required = 'webapp.delete_task'
 
+    def has_permission(self):
+        project = get_object_or_404(Project, pk=self.kwargs.get('pk'))
+        return super().has_permission() and self.request.user in project.authors.all()
+
     def get_success_url(self):
         project_pk = self.object.project.pk
         return reverse_lazy('webapp:project_detail', kwargs={'pk': project_pk})
@@ -52,6 +61,10 @@ class TaskUpdateView(PermissionRequiredMixin, UpdateView):
     form_class = TaskForm
     template_name = 'tasks/task_edit.html'
     permission_required = 'webapp.change_task'
+
+    def has_permission(self):
+        project = get_object_or_404(Project, pk=self.kwargs.get('pk'))
+        return super().has_permission() and self.request.user in project.authors.all()
 
     def form_valid(self, form):
         form.instance.project_id = self.kwargs.get('project_pk')
@@ -101,6 +114,10 @@ class ProjectCreateView(PermissionRequiredMixin, CreateView):
     success_url = reverse_lazy('webapp:home')
     permission_required = 'webapp.add_project'
 
+    def has_permission(self):
+        project = get_object_or_404(Project, pk=self.kwargs.get('pk'))
+        return super().has_permission() and self.request.user in project.authors.all()
+
     def form_valid(self, form):
         form.instance.author = self.request.user
         response = super().form_valid(form)
@@ -118,7 +135,8 @@ class ProjectUpdateView(PermissionRequiredMixin, UpdateView):
     permission_required = 'webapp.change_project'
 
     def has_permission(self):
-        return super().has_permission() or self.request.user == self.get_object().authors.all
+        project = get_object_or_404(Project, pk=self.kwargs.get('pk'))
+        return super().has_permission() and self.request.user in project.authors.all()
 
     def get_success_url(self):
         return reverse_lazy('webapp:project_detail', kwargs={'pk': self.object.pk})
@@ -130,6 +148,10 @@ class ProjectDeleteView(PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('webapp:home')
     permission_required = 'webapp.delete_project'
 
+    def has_permission(self):
+        project = get_object_or_404(Project, pk=self.kwargs.get('pk'))
+        return super().has_permission() and self.request.user in project.authors.all()
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['has_tasks'] = self.object.task_set.exists()
@@ -138,11 +160,16 @@ class ProjectDeleteView(PermissionRequiredMixin, DeleteView):
 
 # -- users_views --
 
-class AddAuthorView(UpdateView):
+class AddAuthorView(PermissionRequiredMixin, UpdateView):
     model = Project
     form_class = ProjectUserForm
     template_name = 'add_author.html'
     context_object_name = 'project'
+    permission_required = 'webapp.add_user'
+
+    def has_permission(self):
+        project = get_object_or_404(Project, pk=self.kwargs.get('pk'))
+        return super().has_permission() and self.request.user in project.authors.all()
 
     def form_valid(self, form):
         form.save()
